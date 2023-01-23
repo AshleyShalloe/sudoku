@@ -18,6 +18,7 @@ body{
     justify-content: center;
     overflow: hidden;
     touch-action: none;
+    cursor: default;
 }
 
 #table_goes_here td{
@@ -25,10 +26,19 @@ body{
     height: 10vmin;
     width: 10vmin;
     transition: background 0.1s;
+    cursor: pointer;
+}
+
+#table_goes_here tr:hover{
+    background: rgb(233, 237, 238);
 }
 
 #table_goes_here td:hover{
     background: lightblue;
+}
+
+#table_goes_here td:active{
+    background: lightskyblue;
 }
 
 #table_goes_here td:nth-child(3n){
@@ -43,22 +53,83 @@ body{
     border-collapse: collapse;
     border: 2px solid black;
 }
+
+#number_pane{
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid grey;
+    border-radius: 1vmin;
+    background: #ffffffcd;
+    padding: 0.2em;
+    flex-direction: column;
+}
+
+#number_pane .np_num{
+    border: 1px solid grey;
+    border-radius: 1vmin;
+    font-size: 6vmin;
+    width: 8vmin;
+    height: 8vmin;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    margin: 0.5vmin;
+    box-shadow: 0px 0px 2px grey;
+    cursor: pointer;
+}
+
+#number_pane .np_num:hover{
+    background: lightblue;
+}
+
+#number_pane .np_num:active{
+    background: lightskyblue;
+}
+
+#number_pane .np_row{
+    display: flex;
+}
+
+.highlighted_col{
+    background: rgb(234, 238, 239);
+}
 </style>
 </head>
 <body>
 
 <div id="table_goes_here"></div>
 
+<div id="number_pane">
+    <div class="np_row">
+        <div class="np_num">1</div>
+        <div class="np_num">2</div>
+        <div class="np_num">3</div>
+    </div>
+    <div class="np_row">
+        <div class="np_num">4</div>
+        <div class="np_num">5</div>
+        <div class="np_num">6</div>
+    </div>
+    <div class="np_row">
+        <div class="np_num">7</div>
+        <div class="np_num">8</div>
+        <div class="np_num">9</div>
+    </div>
+</div>
+
 </body>
 <script>
 'use strict'
 
 function create_playfield(){
-    var return_table = "<table>"
+    var return_table = "<table id='the_table'>"
     for (var i=0; i<9; i++){
         var return_row = ""
         for (var j=0; j<9; j++){
-            return_row += "<td></td>"
+            return_row += `<td data-col=${j} data-row=${i}></td>`
         }
         return_table += ("<tr>" + return_row + "</tr>")
     }
@@ -68,8 +139,35 @@ function create_playfield(){
 
 }
 
+function highlight_all_table_col(col_idx){
+    for (var i=0; i<9; i++){
+        document.getElementById("the_table").rows[i].cells[col_idx].classList.add("highlighted_col")
+    }
+}
+
+function unhighlight_all_table_col(){
+    document.querySelectorAll(".highlighted_col").forEach(x => x.classList.remove("highlighted_col"))
+}
+
+function add_on_mousehover_column_highlight(){
+    document.querySelectorAll("#table_goes_here td").forEach(x =>
+        x.addEventListener("mouseover", (event) => {
+            var dataset = event.target.dataset
+            var row = dataset["row"]
+            var col = dataset["col"]
+            highlight_all_table_col(col);
+        })
+    )
+    document.querySelectorAll("#table_goes_here td").forEach(x =>
+        x.addEventListener("mouseout", (event) => {
+            unhighlight_all_table_col();
+        })
+    )
+}
+
 function init(){
     create_playfield();
+    add_on_mousehover_column_highlight();
 }
 
 init();
