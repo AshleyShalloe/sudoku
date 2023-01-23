@@ -1,6 +1,8 @@
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta charset="UTF-8"/>
 <title>Sudoku</title>
 <style>
@@ -14,6 +16,8 @@ body{
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    touch-action: none;
 }
 
 #table_goes_here td{
