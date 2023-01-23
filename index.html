@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<title>Sudoku</title>
+<style>
+html{
+    font-family: sans-serif;
+}
+
+body{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#table_goes_here td{
+    border: 1px solid black;
+    height: 10vmin;
+    width: 10vmin;
+    transition: background 0.1s;
+}
+
+#table_goes_here td:hover{
+    background: lightblue;
+}
+
+#table_goes_here td:nth-child(3n){
+    border-right: 2px solid black
+}
+
+#table_goes_here tr:nth-child(3n){
+    border-bottom: 2px solid black
+}
+
+#table_goes_here table{
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+</style>
+</head>
+<body>
+
+<div id="table_goes_here"></div>
+
+</body>
+<script>
+'use strict'
+
+function create_playfield(){
+    var return_table = "<table>"
+    for (var i=0; i<9; i++){
+        var return_row = ""
+        for (var j=0; j<9; j++){
+            return_row += "<td></td>"
+        }
+        return_table += ("<tr>" + return_row + "</tr>")
+    }
+    return_table += "</table>"
+
+    document.getElementById("table_goes_here").innerHTML = return_table
+
+}
+
+function init(){
+    create_playfield();
+}
+
+init();
+</script>
+</html>
