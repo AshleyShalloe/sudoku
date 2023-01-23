@@ -27,6 +27,9 @@ body{
     width: 10vmin;
     transition: background 0.1s;
     cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 5vmin;
 }
 
 #table_goes_here tr:hover{
@@ -96,6 +99,11 @@ body{
 .highlighted_col{
     background: rgb(234, 238, 239);
 }
+
+#table_goes_here table td.is_selected_cell{
+    background: #009aff;
+    color: white;
+}
 </style>
 </head>
 <body>
@@ -163,11 +171,68 @@ function add_on_mousehover_column_highlight(){
             unhighlight_all_table_col();
         })
     )
+    document.querySelectorAll("#table_goes_here td").forEach(x =>
+        x.addEventListener("touchstart", (event) => {
+            var dataset = event.target.dataset
+            var row = dataset["row"]
+            var col = dataset["col"]
+            highlight_all_table_col(col);
+        })
+    )
+    document.querySelectorAll("#table_goes_here td").forEach(x =>
+        x.addEventListener("touchend", (event) => {
+            unhighlight_all_table_col();
+        })
+    )
+}
+
+function deselect_is_selected_cell(){
+    document.querySelectorAll(".is_selected_cell").forEach(x =>
+        x.classList.remove("is_selected_cell")
+    )
+}
+
+function add_onclick_cell_listener(){
+    document.querySelectorAll("#table_goes_here td").forEach(x =>
+        x.addEventListener("click", (event) => {
+            deselect_is_selected_cell()
+            x.classList.add("is_selected_cell")
+        })
+    )
+    document.querySelectorAll("#table_goes_here td").forEach(x =>
+        x.addEventListener("touchstart", (event) => {
+            deselect_is_selected_cell()
+            x.classList.add("is_selected_cell")
+        })
+    )
+}
+
+function add_number_button_onclick(){
+    document.querySelectorAll("#number_pane .np_num").forEach(x =>
+        x.addEventListener("click", (event) => {
+            var button_num = x.innerText
+            if (document.getElementsByClassName("is_selected_cell")[0]){
+                document.getElementsByClassName("is_selected_cell")[0].innerText = button_num
+            }
+        })
+    )
+}
+
+function add_body_onclick(){
+    document.getElementsByTagName("body")[0].addEventListener("click", (event) => {
+        if (event.composedPath()[0].tagName == "BODY"){
+            deselect_is_selected_cell();
+            unhighlight_all_table_col();
+        }
+    })
 }
 
 function init(){
     create_playfield();
     add_on_mousehover_column_highlight();
+    add_onclick_cell_listener();
+    add_number_button_onclick();
+    add_body_onclick();
 }
 
 init();
