@@ -21,6 +21,7 @@ body{
     cursor: default;
     background: url("res/bg.jpg");
     background-size: cover;
+    user-select: none;
 }
 
 #table_goes_here td{
@@ -146,7 +147,7 @@ body{
 }
 
 .hidden{
-    display: none !important;
+    visibility: hidden !important;
 }
 </style>
 </head>
@@ -242,6 +243,7 @@ function deselect_is_selected_cell(){
 function add_onclick_cell_listener(){
     document.querySelectorAll("#table_goes_here td").forEach(x =>
         x.addEventListener("click", (event) => {
+            move_numpad_out_of_the_way(x);
             if (x.classList.contains("is_selected_cell")){
                 toggle_numpad()
             }
@@ -254,6 +256,7 @@ function add_onclick_cell_listener(){
     )
     document.querySelectorAll("#table_goes_here td").forEach(x =>
         x.addEventListener("touchstart", (event) => {
+            move_numpad_out_of_the_way(x);
             if (x.classList.contains("is_selected_cell")){
                 toggle_numpad()
             }
@@ -280,6 +283,36 @@ function hide_numpad(){
 
 function toggle_numpad(){
     document.getElementById("number_pane").classList.toggle("hidden")
+}
+
+function move_numpad_out_of_the_way(clicked_cell_element){
+    // how are we going to do this?
+    var dataset = clicked_cell_element.dataset
+    var col = parseInt(dataset["col"])
+    var row = parseInt(dataset["row"])
+    var where_to_move_it_x = col > 6 ? "left" : col < 4 ? "right" : "middle"
+    var where_to_move_it_y = row > 6 ? "top" : row < 4 ? "bottom" : "middle"
+    var number_pane_width = Math.ceil(7 * document.getElementById("number_pane").offsetWidth / window.innerWidth) // need to update this on client resize
+    var number_pane_height = Math.ceil(7 * document.getElementById("number_pane").offsetHeight / window.innerHeight) // this too
+
+    if (where_to_move_it_x == "right"){
+        document.getElementById("number_pane").style.left = `${col + number_pane_width}0%`
+    }
+    else if (where_to_move_it_x == "left"){
+        document.getElementById("number_pane").style.left = `${col - number_pane_width}0%`
+    }
+    else if (where_to_move_it_x == "middle"){
+        document.getElementById("number_pane").style.left = `${col - number_pane_width}0%`
+    }
+    if (where_to_move_it_y == "top"){
+        document.getElementById("number_pane").style.top = `${row - number_pane_height}0%`
+    }
+    else if (where_to_move_it_y == "bottom"){
+        document.getElementById("number_pane").style.top = `${row + number_pane_height}0%`
+    }
+    else if (where_to_move_it_y == "middle"){
+        document.getElementById("number_pane").style.top = `${row - number_pane_height}0%`
+    }
 }
 
 function add_number_button_onclick(){
