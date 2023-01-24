@@ -93,6 +93,7 @@ body{
     background: #ffffffcd;
     padding: 0.2em;
     flex-direction: column;
+    transition: top 0.1s, left 0.1s;
 }
 
 #number_pane .np_num{
@@ -246,19 +247,6 @@ function add_onclick_cell_listener(){
             move_numpad_out_of_the_way(x);
             if (x.classList.contains("is_selected_cell")){
                 toggle_numpad()
-            }
-            else{
-                unhide_numpad()
-            }
-            deselect_is_selected_cell()
-            x.classList.add("is_selected_cell")
-        })
-    )
-    document.querySelectorAll("#table_goes_here td").forEach(x =>
-        x.addEventListener("touchstart", (event) => {
-            move_numpad_out_of_the_way(x);
-            if (x.classList.contains("is_selected_cell")){
-                //toggle_numpad()
             }
             else{
                 unhide_numpad()
