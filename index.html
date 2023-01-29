@@ -151,6 +151,11 @@ body{
 .hidden{
     visibility: hidden !important;
 }
+
+#table_goes_here table td.has_clash{
+    background: red;
+    color: white;
+}
 </style>
 </head>
 <body>
@@ -310,12 +315,14 @@ function add_number_button_onclick(){
             var button_num = x.innerText
             if (document.getElementsByClassName("is_selected_cell")[0]){
                 document.getElementsByClassName("is_selected_cell")[0].innerText = button_num
+                check_for_clashes(document.getElementsByClassName("is_selected_cell")[0])
             }
         })
     )
     document.getElementById("clear_button").addEventListener("click", (event) => {
         if (document.getElementsByClassName("is_selected_cell")[0]){
             document.getElementsByClassName("is_selected_cell")[0].innerText = ""
+            check_for_clashes(document.getElementsByClassName("is_selected_cell")[0])
         }
     })
 }
@@ -328,6 +335,76 @@ function add_body_onclick(){
             hide_numpad();
         }
     })
+}
+
+function check_for_clashes(cell_element){
+    var cell_value = cell_element.innerText
+    var cell_element_col = parseInt(cell_element.dataset.col)
+    var cell_element_row = parseInt(cell_element.dataset.row)
+    var is_row_clash = -1
+    var is_col_clash = -1
+    var is_3_by_3_clash = -1
+
+    if (!cell_value){
+        if (cell_element.classList.contains("has_clash")){
+            cell_element.classList.remove("has_clash")
+        }
+        return
+    }
+    
+    // check row
+    var row_numbers = Array.prototype.map.call(
+        document.querySelectorAll(`[data-row='${cell_element_row}']`), x => x.innerText
+    )
+    
+    for (var i=0; i<row_numbers.length; i++){
+        if (row_numbers[i] == cell_value){
+            is_row_clash++
+        }
+    }
+
+    // check column
+    var column_numbers = Array.prototype.map.call(
+        document.querySelectorAll(`[data-col='${cell_element_col}']`), x => x.innerText
+    )
+    
+    for (var i=0; i<column_numbers.length; i++){
+        if (column_numbers[i] == cell_value){
+            is_col_clash++
+        }
+    }
+
+    // check 3x3 section
+    var centre_of_3_by_3_col = (Math.floor(cell_element_col / 3) * 3) + 1
+    var centre_of_3_by_3_row = (Math.floor(cell_element_row / 3) * 3) + 1
+    var col_start = centre_of_3_by_3_col - 1
+    var col_end   = centre_of_3_by_3_col + 1
+    var row_start = centre_of_3_by_3_row - 1
+    var row_end   = centre_of_3_by_3_row + 1
+    var numbers_in_3_by_3 = []
+    for (var col=col_start; col<col_end+1; col++){
+        for (var row=row_start; row<row_end+1; row++){
+            numbers_in_3_by_3.push(
+                document.querySelector(`[data-col='${col}'][data-row='${row}']`).innerText
+            )
+        }
+    }
+    for (var i=0; i<numbers_in_3_by_3.length; i++){
+        if (numbers_in_3_by_3[i] == cell_value){
+            is_3_by_3_clash++
+        }
+    }
+
+    if (is_row_clash || is_col_clash || is_3_by_3_clash){
+        cell_element.classList.add("has_clash")
+    }
+    else{
+        if (cell_element.classList.contains("has_clash")){
+            cell_element.classList.remove("has_clash")
+        }
+    }
+
+    return [is_row_clash, is_col_clash, is_3_by_3_clash]
 }
 
 function init(){
