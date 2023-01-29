@@ -315,14 +315,14 @@ function add_number_button_onclick(){
             var button_num = x.innerText
             if (document.getElementsByClassName("is_selected_cell")[0]){
                 document.getElementsByClassName("is_selected_cell")[0].innerText = button_num
-                check_for_clashes(document.getElementsByClassName("is_selected_cell")[0])
+                check_for_clashes_all()
             }
         })
     )
     document.getElementById("clear_button").addEventListener("click", (event) => {
         if (document.getElementsByClassName("is_selected_cell")[0]){
             document.getElementsByClassName("is_selected_cell")[0].innerText = ""
-            check_for_clashes(document.getElementsByClassName("is_selected_cell")[0])
+            check_for_clashes_all()
         }
     })
 }
@@ -405,6 +405,12 @@ function check_for_clashes(cell_element){
     }
 
     return [is_row_clash, is_col_clash, is_3_by_3_clash]
+}
+
+function check_for_clashes_all(){
+    document.querySelectorAll("#the_table tr td").forEach(
+        x => check_for_clashes(x)
+    )
 }
 
 function init(){
