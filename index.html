@@ -413,12 +413,27 @@ function check_for_clashes_all(){
     )
 }
 
+function isFirefox(){
+    return navigator.userAgent.match(/firefox/i)
+}
+
+function firefoxQuirks(){
+    if (isFirefox()){
+        // set viewport height to 100vh
+        var element = document.createElement('style');
+        element.innerHTML = "body{height: 100vh}";
+        document.head.appendChild(element);
+        
+    }
+}
+
 function init(){
     create_playfield();
     add_on_mousehover_column_highlight();
     add_onclick_cell_listener();
     add_number_button_onclick();
     add_body_onclick();
+    firefoxQuirks();
 }
 
 init();
